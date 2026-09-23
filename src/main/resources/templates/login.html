@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}" lang="es">
+
+<head>
+    <title>Iniciar sesión — Hotel El Descanso Eterno</title>
+</head>
+
+<body>
+<div layout:fragment="content">
+
+    <div class="bg-secondary text-white py-5">
+        <div class="container">
+            <p class="text-uppercase text-warning fw-bold small mb-2" style="letter-spacing:2px">Acceso</p>
+            <h1 class="display-5 fw-bold">Iniciar sesión</h1>
+        </div>
+    </div>
+
+    <div class="container my-5 d-flex justify-content-center">
+        <div class="card shadow p-4" style="max-width:420px;width:100%">
+
+            <div class="alert alert-success" th:if="${mensajeExito != null}" th:text="${mensajeExito}"></div>
+
+            <!-- Nota: por ahora el login es simulado (no hay Spring Security todavía) -->
+            <form th:action="@{/login}" method="post" class="needs-validation" novalidate>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Usuario</label>
+                    <input type="text" class="form-control" name="username" placeholder="Ingresa tu usuario" required autofocus>
+                    <div class="invalid-feedback">El usuario es obligatorio.</div>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label fw-semibold">Contraseña</label>
+                    <input type="password" class="form-control" name="password" placeholder="Ingresa tu contraseña" required>
+                    <div class="invalid-feedback">La contraseña es obligatoria.</div>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="bi bi-box-arrow-in-right me-2"></i>Iniciar sesión
+                </button>
+            </form>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}" lang="es">
+
+<head>
+    <title>Inicio — Hotel El Descanso Eterno</title>
+    <style>
+        .carousel-img { width: 100%; height: 500px; object-fit: cover; }
+        @media (max-width: 992px) { .carousel-img { height: 360px; } }
+        @media (max-width: 576px) { .carousel-img { height: 220px; } }
+        .servicio-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .servicio-card:hover { transform: translateY(-6px); box-shadow: 0 0.75rem 1.5rem rgba(0,0,0,.12) !important; }
+    </style>
+</head>
+
+<body>
+<div layout:fragment="content">
+
+    <!-- ========== HERO ========== -->
+    <div class="bg-secondary text-white py-5">
+        <div class="container">
+            <p class="text-uppercase text-warning fw-bold small mb-2" style="letter-spacing:2px">Bienvenido</p>
+            <h1 class="display-5 fw-bold">Hotel El Descanso Eterno</h1>
+            <p class="lead text-white-50 mt-3">
+                Comodidad, seguridad y un servicio exclusivo pet-friendly para tu próxima estadía.
+            </p>
+            <div class="d-flex flex-wrap gap-3 mt-4">
+                <a th:href="@{/habitaciones}" class="btn btn-warning fw-bold px-4">
+                    <i class="bi bi-door-open me-2"></i>Ver habitaciones
+                </a>
+                <a th:href="@{/contacto}" class="btn btn-outline-light px-4">
+                    <i class="bi bi-envelope me-2"></i>Contáctanos
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== CARRUSEL ========== -->
+    <div class="container my-5">
+        <div id="galeria" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000" data-bs-pause="false">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#galeria" data-bs-slide-to="0" class="active" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#galeria" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#galeria" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            </div>
+            <div class="carousel-inner">
+                <div class="carousel-item active"><img th:src="@{img/isidro1.jpg}" class="carousel-img" alt="isidro1"></div>
+                <div class="carousel-item"><img th:src="@{img/isidro2.jpg}" class="carousel-img" alt="isidro2"></div>
+                <div class="carousel-item"><img th:src="@{img/isidro3.jpg}" class="carousel-img" alt="isidro3"></div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#galeria" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#galeria" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ========== SERVICIOS ========== -->
+    <section class="container my-5">
+        <h2 class="fw-bold border-start border-4 border-success ps-3 mb-4">
+            <i class="bi bi-stars me-2"></i>Nuestros servicios
+        </h2>
+        <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 g-4 text-center">
+            <div class="col">
+                <div class="card h-100 border-0 shadow-sm py-4 servicio-card">
+                    <i class="bi bi-wifi text-primary" style="font-size: 2.5rem;"></i>
+                    <h6 class="fw-bold mt-3 mb-1">WiFi gratis</h6>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100 border-0 shadow-sm py-4 servicio-card">
+                    <i class="bi bi-cup-hot text-warning" style="font-size: 2.5rem;"></i>
+                    <h6 class="fw-bold mt-3 mb-1">Desayuno incluido</h6>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100 border-0 shadow-sm py-4 servicio-card">
+                    <i class="bi bi-water text-info" style="font-size: 2.5rem;"></i>
+                    <h6 class="fw-bold mt-3 mb-1">Piscina</h6>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100 border-0 shadow-sm py-4 servicio-card">
+                    <i class="bi bi-heart text-danger" style="font-size: 2.5rem;"></i>
+                    <h6 class="fw-bold mt-3 mb-1">Pet-friendly</h6>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100 border-0 shadow-sm py-4 servicio-card">
+                    <i class="bi bi-p-square text-success" style="font-size: 2.5rem;"></i>
+                    <h6 class="fw-bold mt-3 mb-1">Estacionamiento</h6>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== MUESTRA DE HABITACIONES ========== -->
+    <section class="container my-5">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+            <h2 class="fw-bold border-start border-4 border-primary ps-3 mb-0">
+                <i class="bi bi-door-open me-2"></i>Nuestras habitaciones
+            </h2>
+            <span class="badge fs-6 py-2 px-3 bg-success">
+                <span th:text="${habitacionesLibres}">0</span> de
+                <span th:text="${totalHabitaciones}">0</span> disponibles
+            </span>
+        </div>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            <div class="col" th:each="h : ${habitaciones}">
+                <div class="card h-100">
+                    <div class="card-header d-flex justify-content-between align-items-center" th:classappend="${h.headerClass}">
+                        <span th:text="|Hab. ${h.numero} — ${h.tipo}|"></span>
+                        <span class="badge" th:classappend="${h.estadoBadgeClass}" th:text="${h.estadoMostrado}"></span>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text text-muted" th:text="${h.descripcion}"></p>
+                        <p class="fw-bold fs-5 text-warning mb-0">
+                            S/ <span th:text="${#numbers.formatInteger(h.precio, 1)}"></span>
+                            <span class="text-muted fw-normal fs-6">/ noche</span>
+                        </p>
+                    </div>
+                    <div class="card-footer">
+                        <a th:href="@{/habitaciones}" class="btn btn-primary btn-sm w-100">
+                            <i class="bi bi-eye me-1"></i>Ver más
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== TESTIMONIOS ========== -->
+    <section class="container my-5">
+        <h2 class="fw-bold border-start border-4 border-warning ps-3 mb-4">
+            <i class="bi bi-chat-quote me-2"></i>Lo que dicen nuestros huéspedes
+        </h2>
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <div class="col">
+                <div class="card h-100 border-0 shadow-sm p-4">
+                    <h6 class="fw-bold mb-1">María Gutiérrez</h6>
+                    <div class="text-warning small mb-2">
+                        <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                    </div>
+                    <p class="text-muted mb-0 fst-italic">"Excelente atención, pude hospedarme junto a mi perro sin problema."</p>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100 border-0 shadow-sm p-4">
+                    <h6 class="fw-bold mb-1">Jorge Ramírez</h6>
+                    <div class="text-warning small mb-2">
+                        <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                    </div>
+                    <p class="text-muted mb-0 fst-italic">"El desayuno buffet superó mis expectativas, volveré sin duda."</p>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100 border-0 shadow-sm p-4">
+                    <h6 class="fw-bold mb-1">Lucía Torres</h6>
+                    <div class="text-warning small mb-2">
+                        <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i>
+                    </div>
+                    <p class="text-muted mb-0 fst-italic">"Hotel cómodo, limpio y con muy buena ubicación."</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>
+</body>
+</html>

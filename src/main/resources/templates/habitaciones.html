@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}" lang="es">
+
+<head>
+    <title>Habitaciones — Hotel El Descanso Eterno</title>
+</head>
+
+<body>
+<div layout:fragment="content">
+
+    <div class="bg-secondary text-white py-5">
+        <div class="container">
+            <p class="text-uppercase text-warning fw-bold small mb-2" style="letter-spacing:2px">Catálogo</p>
+            <h1 class="display-5 fw-bold">Nuestras habitaciones</h1>
+            <p class="lead text-white-50 mt-2 mb-0">Elige la que mejor se adapte a tu estadía.</p>
+        </div>
+    </div>
+
+    <div class="container mt-4">
+        <div class="alert alert-success alert-dismissible fade show" th:if="${mensajeExito != null}">
+            <span th:text="${mensajeExito}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    </div>
+
+    <!-- ========== CATÁLOGO ========== -->
+    <section class="container my-5">
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            <div class="col" th:each="h : ${habitaciones}">
+                <div class="card h-100">
+                    <div class="card-header d-flex justify-content-between align-items-center" th:classappend="${h.headerClass}">
+                        <span th:text="|Hab. ${h.numero} — ${h.tipo}|"></span>
+                        <span class="badge" th:classappend="${h.estadoBadgeClass}" th:text="${h.estadoMostrado}"></span>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text text-muted" th:text="${h.descripcion}"></p>
+                        <p class="fw-bold fs-5 text-warning mb-0">
+                            S/ <span th:text="${#numbers.formatInteger(h.precio, 1)}"></span>
+                            <span class="text-muted fw-normal fs-6">/ noche</span>
+                        </p>
+                    </div>
+                    <div class="card-footer d-flex gap-2">
+                        <a th:if="${h.disponible}" href="#formularioSolicitud" class="btn btn-primary btn-sm w-100">
+                            <i class="bi bi-calendar-plus me-1"></i>Solicitar
+                        </a>
+                        <button th:unless="${h.disponible}" class="btn btn-secondary btn-sm w-100" disabled>No disponible</button>
+                        <button class="btn btn-outline-secondary btn-sm"
+                                th:attr="data-numero=${h.numero}, data-tipo=${h.tipo}, data-precio=${h.precio},
+                                         data-estado=${h.estadoMostrado}, data-descripcion=${h.descripcion},
+                                         data-amenidades=${h.amenidadesStr}"
+                                onclick="abrirDetalle(this)" data-bs-toggle="modal" data-bs-target="#modalDetalleHab">
+                            <i class="bi bi-eye"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== FORMULARIO DE SOLICITUD DE RESERVA ========== -->
+    <section id="formularioSolicitud" class="container my-5">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <i class="bi bi-calendar-plus me-2"></i>Solicitar una reserva
+            </div>
+            <div class="card-body">
+                <form th:action="@{/habitaciones/solicitar}" method="post" class="row g-3 needs-validation" novalidate>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Nombre completo</label>
+                        <input type="text" class="form-control" name="nombre" required>
+                        <div class="invalid-feedback">El nombre es obligatorio.</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Habitación</label>
+                        <select class="form-select" name="habitacion" required>
+                            <option value="" selected disabled>Selecciona una habitación</option>
+                            <option th:each="h : ${habitaciones}" th:value="${h.numero}"
+                                    th:text="|Hab. ${h.numero} — ${h.tipo}|"></option>
+                        </select>
+                        <div class="invalid-feedback">Selecciona una habitación.</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Fecha de entrada</label>
+                        <input type="date" class="form-control" name="fechaEntrada" required>
+                        <div class="invalid-feedback">Ingresa la fecha de entrada.</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Fecha de salida</label>
+                        <input type="date" class="form-control" name="fechaSalida" required>
+                        <div class="invalid-feedback">Ingresa la fecha de salida.</div>
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary px-4">
+                            <i class="bi bi-send me-1"></i>Enviar solicitud
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== MODAL: DETALLE HABITACIÓN ========== -->
+    <div class="modal fade" id="modalDetalleHab" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-warning text-dark">
+                    <h5 class="modal-title fw-bold" id="detalleTitulo"><i class="bi bi-door-closed me-2"></i>Habitación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-2 mb-3">
+                        <div class="col-6">
+                            <div class="p-2 bg-light rounded text-center">
+                                <div class="text-muted small">Tipo</div>
+                                <div class="fw-bold" id="detalleTipo">—</div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-2 bg-light rounded text-center">
+                                <div class="text-muted small">Precio / noche</div>
+                                <div class="fw-bold text-warning" id="detallePrecio">—</div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-2 bg-light rounded text-center">
+                                <div class="text-muted small">Estado</div>
+                                <span class="badge" id="detalleEstadoBadge">—</span>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-2 bg-light rounded text-center">
+                                <div class="text-muted small">N° Habitación</div>
+                                <div class="fw-bold" id="detalleNumero">—</div>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-muted small" id="detalleDescripcion"></p>
+                    <div class="d-flex flex-wrap gap-2 mt-2" id="detalleAmenidades"></div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <a href="#formularioSolicitud" class="btn btn-primary" data-bs-dismiss="modal">
+                        <i class="bi bi-calendar-plus me-1"></i>Solicitar
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<th:block layout:fragment="scripts">
+    <script>
+        function abrirDetalle(btn) {
+            const d = btn.dataset;
+            document.getElementById('detalleTitulo').innerHTML =
+                `<i class="bi bi-door-closed me-2"></i>Hab. ${d.numero} — ${d.tipo}`;
+            document.getElementById('detalleTipo').textContent = d.tipo;
+            document.getElementById('detallePrecio').textContent = 'S/ ' + parseFloat(d.precio).toFixed(0);
+            document.getElementById('detalleNumero').textContent = d.numero;
+            document.getElementById('detalleDescripcion').textContent = d.descripcion;
+            const badge = document.getElementById('detalleEstadoBadge');
+            badge.textContent = d.estado;
+            badge.className = 'badge ' + (d.estado === 'Disponible' ? 'bg-success' : 'bg-warning text-dark');
+            const cont = document.getElementById('detalleAmenidades');
+            cont.innerHTML = '';
+            (d.amenidades || '').split(',').filter(a => a.trim()).forEach(a => {
+                cont.innerHTML += `<span class="badge bg-secondary"><i class="bi bi-check me-1"></i>${a.trim()}</span>`;
+            });
+        }
+    </script>
+</th:block>
+</body>
+</html>
