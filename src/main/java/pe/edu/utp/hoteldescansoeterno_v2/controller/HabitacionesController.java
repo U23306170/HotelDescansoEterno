@@ -1,4 +1,4 @@
-package edu.pe.utp.grupo3.hoteldescansoeterno.controller;
+package pe.edu.utp.hoteldescansoeterno_v2.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import edu.pe.utp.grupo3.hoteldescansoeterno.viewmodel.HabitacionView;
+import pe.edu.utp.hoteldescansoeterno_v2.viewmodel.HabitacionView;
 
 import java.util.List;
 

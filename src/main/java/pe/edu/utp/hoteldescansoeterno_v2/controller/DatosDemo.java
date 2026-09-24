@@ -1,6 +1,6 @@
-package edu.pe.utp.grupo3.hoteldescansoeterno.controller;
+package pe.edu.utp.hoteldescansoeterno_v2.controller;
 
-import edu.pe.utp.grupo3.hoteldescansoeterno.viewmodel.HabitacionView;
+import pe.edu.utp.hoteldescansoeterno_v2.viewmodel.HabitacionView;
 
 import java.util.List;
 

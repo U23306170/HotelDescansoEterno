@@ -1,4 +1,4 @@
-package edu.pe.utp.grupo3.hoteldescansoeterno.viewmodel;
+package pe.edu.utp.hoteldescansoeterno_v2.viewmodel;
 
 import java.util.List;
 
